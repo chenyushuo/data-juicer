@@ -101,7 +101,7 @@ This project is being actively updated and maintained. We eagerly invite you to 
   - ...
 
 ## DJ-SORA Data Validation and Model Training
-  - [ ] Exploring and refining the collaborative development of multimodal data and model, establishing benchmarks and insights. [paper](https://arxiv.org/abs/2407.11784)
+  - [ ] Exploring and refining the collaborative development of multimodal data and model, establishing benchmarks and insights.
   - [ ] [WIP] Integration of SORA-like model training pipelines
     - [EasyAnimate](https://github.com/aigc-apps/EasyAnimate)
     - [✅] [T2V](https://t2v-turbo.github.io/)

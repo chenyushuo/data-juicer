@@ -105,7 +105,7 @@ DJ-SORA将基于Data-Juicer(包含上百个专用的视频、图像、音频、�
   - ...
 
 ## DJ-SORA数据验证及模型训练
-  - [✅]  探索及完善多模态数据和模型的协同开发，形成benchmark和insights: [paper](https://arxiv.org/abs/2407.11784)
+  - [✅]  探索及完善多模态数据和模型的协同开发，形成benchmark和insights
   - [] [WIP] 类SORA模型训练pipeline集成
     - [✅] [EasyAnimate](https://github.com/aigc-apps/EasyAnimate)
     - [✅] [T2V](https://t2v-turbo.github.io/)
