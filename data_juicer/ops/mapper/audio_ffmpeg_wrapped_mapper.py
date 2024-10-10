@@ -1,16 +1,16 @@
 from typing import Dict, List, Optional
 
-from data_juicer.utils.availability_utils import AvailabilityChecking
 from data_juicer.utils.constant import Fields
 from data_juicer.utils.file_utils import transfer_filename
+from data_juicer.utils.lazy_loader import LazyLoader
 from data_juicer.utils.logger_utils import HiddenPrints
 
-from ..base_op import OPERATORS, Mapper
+from ..base_op import AUTOINSTALL, OPERATORS, Mapper
 
 OP_NAME = 'audio_ffmpeg_wrapped_mapper'
 
-with AvailabilityChecking(['ffmpeg-python'], OP_NAME), HiddenPrints():
-    import ffmpeg
+with HiddenPrints():
+    ffmpeg = LazyLoader('ffmpeg', 'ffmpeg')
 
 
 @OPERATORS.register_module(OP_NAME)
@@ -40,6 +40,7 @@ class AudioFFmpegWrappedMapper(Mapper):
         :param kwargs: extra args
         """
         super().__init__(*args, **kwargs)
+        AUTOINSTALL.check(['ffmpeg-python'])
         self._init_parameters = self.remove_extra_parameters(locals())
 
         self.filter_name = filter_name

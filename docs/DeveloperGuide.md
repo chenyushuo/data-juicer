@@ -375,6 +375,31 @@ else:
 ...
 ```
 
+5. As the number of OPs increases, Data-Juicer's dependencies also multiply. To prevent Data-Juicer from becoming excessively burdened with dependencies, we've implemented a strategy that incorporates lazy importing and on-demand installation of additional dependencies required by OPs. Below is an example illustrating this approach:
+
+```python
+# ... (import some library)
+from ..base_op import AUTOINSTALL
+from data_juicer.utils.lazy_loader import LazyLoader
+
+# lazy import
+kenlm = LazyLoader('kenlm', 'kenlm')
+sp = LazyLoader('sp', 'sentencepiece')
+
+class PerplexityFilter(Filter):
+    def __init__(self,
+                # ... (OP parameters)
+                *args,
+                **kwargs):
+        # auto install before init
+        super().__init__(*args, **kwargs)
+        AUTOINSTALL.check(['sentencepiece', 'kenlm'])
+        # ... (some codes)
+
+    def process(self, sample):
+        # ... (some codes)
+```
+
 ## Build your own configs
 - We provide easy configuration based on [jsonargparse](https://github.com/omni-us/jsonargparse/) to reduce cost for boilerplate codes.
 

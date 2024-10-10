@@ -1,16 +1,12 @@
 import sys
 
-from data_juicer.utils.availability_utils import AvailabilityChecking
 from data_juicer.utils.constant import Fields, StatsKeys
 from data_juicer.utils.model_utils import get_model, prepare_model
 
-from ..base_op import OPERATORS, Filter
+from ..base_op import AUTOINSTALL, OPERATORS, Filter
 from ..common import get_words_from_document
 
 OP_NAME = 'alphanumeric_filter'
-
-with AvailabilityChecking(['transformers'], OP_NAME):
-    import transformers  # noqa: F401
 
 
 @OPERATORS.register_module('alphanumeric_filter')
@@ -43,6 +39,7 @@ class AlphanumericFilter(Filter):
         :param kwargs: extra args
         """
         super().__init__(*args, **kwargs)
+        AUTOINSTALL.check(['transformers'])
         self.tokenization = tokenization
         self.min_ratio = min_ratio
         self.max_ratio = max_ratio
@@ -86,10 +83,9 @@ class AlphanumericFilter(Filter):
         ratio_key = StatsKeys.alpha_token_ratio if self.tokenization \
             else StatsKeys.alnum_ratio
         if isinstance(samples[Fields.stats], list):
-            return list(
-                map(
-                    lambda stat: self.min_ratio <= stat[ratio_key] <= self.
-                    max_ratio, samples[Fields.stats]))
+            return map(
+                lambda stat: self.min_ratio <= stat[ratio_key] <= self.
+                max_ratio, samples[Fields.stats])
         else:
             # single sample for ray filter
             if self.min_ratio <= samples[

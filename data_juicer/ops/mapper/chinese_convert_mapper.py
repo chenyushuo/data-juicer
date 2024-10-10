@@ -1,11 +1,10 @@
-from data_juicer.utils.availability_utils import AvailabilityChecking
+from data_juicer.utils.lazy_loader import LazyLoader
 
-from ..base_op import OPERATORS, Mapper
+from ..base_op import AUTOINSTALL, OPERATORS, Mapper
 
 OP_NAME = 'chinese_convert_mapper'
 
-with AvailabilityChecking(['opencc'], OP_NAME):
-    import opencc  # noqa: F401
+opencc = LazyLoader('opencc', 'opencc')
 
 OPENCC_CONVERTER = None
 
@@ -75,6 +74,7 @@ class ChineseConvertMapper(Mapper):
         :param kwargs: extra args
         """
         super().__init__(*args, **kwargs)
+        AUTOINSTALL.check(['opencc'])
         mode_list = [
             's2t', 't2s', 's2tw', 'tw2s', 's2hk', 'hk2s', 's2twp', 'tw2sp',
             't2tw', 'tw2t', 'hk2t', 't2hk', 't2jp', 'jp2t'
@@ -87,7 +87,7 @@ class ChineseConvertMapper(Mapper):
     def process(self, samples):
         prepare_converter(self.mode)
 
-        samples[self.text_key] = list(
-            map(lambda text: OPENCC_CONVERTER.convert(text),
-                samples[self.text_key]))
+        samples[self.text_key] = [
+            OPENCC_CONVERTER.convert(text) for text in samples[self.text_key]
+        ]
         return samples
