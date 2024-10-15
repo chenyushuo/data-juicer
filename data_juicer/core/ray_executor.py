@@ -57,6 +57,8 @@ class RayExecutor:
             from data_juicer.format.formatter import FORMATTERS
             dataset = FORMATTERS.modules[obj_name](**args).load_dataset()
         else:
+            self.cfg.dataset_path = self.cfg.dataset_path.split(' ')
+            logger.info(self.cfg.dataset_path)
             dataset = rd.read_json(self.cfg.dataset_path)
 
         # convert all the path in dataset to absolute path

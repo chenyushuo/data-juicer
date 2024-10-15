@@ -1,4 +1,5 @@
 import os
+from typing import Union
 from functools import partial
 
 import pyarrow as pa
@@ -90,9 +91,9 @@ class RayDataset(DJDataset):
 
     def __init__(self,
                  dataset: Dataset,
-                 dataset_path: str = None,
+                 dataset_path: Union[str, list[str]] = None,
                  cfg=None) -> None:
-        self.data = preprocess_dataset(dataset, dataset_path, cfg)
+        self.data = preprocess_dataset(dataset, dataset_path if isinstance(dataset_path, str) else dataset_path[0], cfg)
         self.num_proc = None
         if cfg:
             self.num_proc = cfg.np
