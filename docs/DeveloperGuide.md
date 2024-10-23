@@ -394,7 +394,7 @@ class PerplexityFilter(Filter):
                 **kwargs):
         # auto install before init
         super().__init__(*args, **kwargs)
-        AUTOINSTALL.check(['fasttext-wheel'])
+        AUTOINSTALL.check(['spacy-pkuseg'])
         # ... (some codes)
 
     def process_single(self, sample):
