@@ -6,7 +6,9 @@ from loguru import logger
 from data_juicer import cuda_device_count
 from data_juicer.core.data import DJDataset
 from data_juicer.ops import Filter, Mapper
-from data_juicer.utils.constant import Fields
+from data_juicer.ops.deduplicator.ray_minhash_deduplicator import \
+    RayMinhashDeduplicator
+from data_juicer.utils.constant import Fields, HashKeys
 from data_juicer.utils.lazy_loader import LazyLoader
 from data_juicer.utils.process_utils import calculate_np
 
@@ -119,6 +121,14 @@ class RayDataset(DJDataset):
                                                   batch_size=batch_size,
                                                   batch_format='pyarrow',
                                                   num_gpus=num_gpus)
+                if isinstance(op, RayMinhashDeduplicator):
+                    for i in range(len(op.hash_ranges)):
+                        self.data = self.data.groupby(
+                            HashKeys.minhash + f'_{i}').map_groups(
+                                op.agg_func,
+                                batch_format='pyarrow').drop_columns(
+                                    HashKeys.minhash + f'_{i}')
+                    self.data.materialize()
                 if op.stats_export_path is not None:
                     self.data.write_json(op.stats_export_path,
                                          force_ascii=False)

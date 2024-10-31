@@ -183,6 +183,8 @@ class HashKeys(object):
     minhash = DEFAULT_PREFIX + 'minhash'
     simhash = DEFAULT_PREFIX + 'simhash'
 
+    uuid = DEFAULT_PREFIX + 'uuid'
+
     # image
     imagehash = DEFAULT_PREFIX + 'imagehash'
 

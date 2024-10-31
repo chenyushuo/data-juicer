@@ -37,7 +37,7 @@ PKG_TO_OPS = {
         'flagged_words_filter', 'perplexity_filter', 'stopwords_filter',
         'word_repetition_filter', 'words_num_filter'
     ],
-    'scipy': ['document_minhash_deduplicator'],
+    'scipy': ['document_minhash_deduplicator', 'ray_minhash_deduplicator'],
     'ftfy': ['fix_unicode_mapper'],
     'simhash-pybind': [
         'document_simhash_deduplicator', 'image_captioning_mapper',

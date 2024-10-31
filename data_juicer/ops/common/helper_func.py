@@ -3,6 +3,7 @@
 # --------------------------------------------------------
 from typing import Dict
 
+import ray
 import regex as re
 
 
@@ -23,6 +24,32 @@ class UnionFind:
         px = self.find(x)
         py = self.find(y)
         self.parent[px] = self.parent[py] = min(px, py)
+
+
+@ray.remote
+class ActorUnionFind:
+
+    def __init__(self):
+        """Initialization method."""
+        self.parent: Dict[str, str] = {}
+
+    def find(self, x):
+        if x not in self.parent:
+            self.parent[x] = x
+            return x
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+            return self.parent[x]
+        else:
+            return x
+
+    def union(self, x, y):
+        px = self.find(x)
+        py = self.find(y)
+        self.parent[py] = px
+
+    def is_ancestor(self, x):
+        return x == self.parent.get(x, x)
 
 
 def strip(document, strip_characters):
